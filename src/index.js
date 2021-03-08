@@ -15,25 +15,27 @@ module.exports = function check(str, bracketsConfig) {
 		if (open[curr]) {
 			stack.push(curr);
 
-			if (curr == '|' || curr == '7' || curr == '8') {
+			if (curr == '|' || curr == '7' || curr == '8' && stack.length > 0) {
+				let prev = stack.pop();
 				let pr = stack.pop();
-				if (curr === open[stack.pop()]) {
-					continue;
+
+				if (pr == undefined) {
+					stack.push(curr);
+				} else {
+					if (prev != pr) {
+						stack.push(pr);
+						stack.push(curr);
+					}
 				}
-
-				stack.push(pr);
-
 			}
-
-
-
 		} else {
+
 			if (stack.length == 0) return false;
 
 			let prev = stack.pop();
+
 			if (curr != open[prev]) return false;
 		}
-
 	}
 
 	if (stack.length > 0) return false;
